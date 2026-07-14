@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16
+    container_name: assetpulse_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: assetpulse
+      POSTGRES_PASSWORD: assetpulse_pw
+      POSTGRES_DB: assetpulse
+    ports:
+      - "5432:5432"
+    volumes:
+      - assetpulse_pgdata:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  assetpulse_pgdata:
