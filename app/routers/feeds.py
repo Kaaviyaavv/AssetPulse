@@ -48,3 +48,17 @@ def depreciation_feed(db: Session = Depends(get_db)):
         "accumulated_depr": float(r.accumulated_depr),
         "net_book_value": float(r.net_book_value),
     } for r in rows]
+
+
+@router.get("/forecasts")
+def forecasts_feed(forecast_type: str | None = None, db: Session = Depends(get_db)):
+    """Flat feed of Prophet forecast points, for the replacement-forecast /
+    depreciation-trend Power BI views."""
+    q = db.query(orm.Forecast)
+    if forecast_type:
+        q = q.filter(orm.Forecast.forecast_type == forecast_type)
+    rows = q.order_by(orm.Forecast.asset_id, orm.Forecast.ds).all()
+    return [{
+        "asset_id": r.asset_id, "forecast_type": r.forecast_type, "ds": r.ds,
+        "yhat": float(r.yhat), "yhat_lower": float(r.yhat_lower), "yhat_upper": float(r.yhat_upper),
+    } for r in rows]

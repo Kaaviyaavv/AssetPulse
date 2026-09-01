@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.database import Base, engine
 from app.models import orm  # noqa: F401 - registers models
-from app.routers import assets, telemetry, maintenance, depreciation, feeds
+from app.routers import assets, telemetry, maintenance, depreciation, feeds, forecasting
 
 # Create tables if they don't exist (Docker init.sql also does this;
 # this makes the app work even against a fresh empty DB).
@@ -23,6 +23,7 @@ app.include_router(telemetry.router)
 app.include_router(maintenance.router)
 app.include_router(depreciation.router)
 app.include_router(feeds.router)
+app.include_router(forecasting.router)
 
 
 @app.get("/")
